@@ -1,0 +1,27 @@
+RFID REQUIREMENTS
+=================
+
+Hardware:
+At the moment we're using a Touchatag NFC Reader
+
+libnfc:
+- sudo apt-get install libusb-dev libpcsclite-dev
+- wget http://libnfc.googlecode.com/files/libnfc-1.4.2.tar.gz
+- ./configure
+- make
+- sudo make install
+
+pcscd:
+- http://www.libnfc.org/documentation/installation#debian_ubuntu
+- sudo apt-get install libusb-0.1-4 libpcsclite1 libccid pcscd
+- /etc/init.d/dbus start
+- /etc/init.d/hal start
+- /etc/init.d/pcscd start
+
+Sadly you need hal and dbus to be able to talk to the reader
+(and I always forget to start them...)
+
+reader binary:
+- cd reader
+- make
+- cp reader /var/matomat/reader
