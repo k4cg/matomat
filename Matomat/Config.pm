@@ -3,7 +3,7 @@
 package Matomat::Config;
 use Exporter 'import';
 @ISA         = qw(Exporter);
-@EXPORT = qw($dbfile $echobin $festivalbin $clear_string $pluginpath $font $timeout $rtrate @t2s_credits @t2s_stats @t2s_quit @t2s_pay_minus15 @t2s_pay_minus10 @t2s_pay_minus5 @t2s_badlogin);
+@EXPORT = qw($dbfile $echobin $festivalbin $clear_string $pluginpath $font $timeout $rtrate @t2s_credits @t2s_stats @t2s_quit @t2s_pay_minus15 @t2s_pay_minus10 @t2s_pay_minus5 @t2s_badlogin $rfidbin);
 
 use Config::Simple;
 
@@ -23,4 +23,5 @@ our $pluginpath = $cfg->param('global.pluginpath');
 our $font = Text::FIGlet->new(-m=>-1,-f=>$cfg->param('global.font'));
 our $timeout = $cfg->param('global.timeout');
 our $rtrate = $cfg->param('global.realtime');
+our $rfidbin = $cfg->param('global.rfidbin');
 1;

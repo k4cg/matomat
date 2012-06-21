@@ -21,6 +21,8 @@ Perl modules:
 - IO::Prompter (Version: 0.002000)
 - Term::ReadKey
 - Module::Load
+- IO::Select
+- IPC::Open3
 
 Install missing modules using the following command
 

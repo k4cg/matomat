@@ -8,6 +8,8 @@ use Digest::SHA qw(sha512 sha512_base64 sha512_hex);
 use Term::ReadKey;
 use Config::Simple;
 use Module::Load;
+use IO::Select;
+use IPC::Open3;
 
 # Matomat Modules
 use Matomat::Config;
@@ -16,6 +18,12 @@ use Matomat::Banner;
 use Matomat::DBConnect;
 
 $ENV{'PATH'} = '/bin:/usr/bin';
+
+# only use rfid if a) there's a binary b) we are on a actual TTY
+my $userfid = undef;
+if (`/usr/bin/tty` =~ 'pts' and $rfidbin != "") {
+	$userfid = "fnord";
+}
 
 &_login;
 
@@ -217,11 +225,62 @@ sub _main_menu {
 }
 
 sub _prompt_for_login {
-	my $user = prompt 'User:' ;
-	&_bad_input($user);
-	my $passwd = prompt 'Password:', -echo=>'*';
-	my @pwent = ($user, $passwd);
-	return @pwent;
+	my $user;
+
+	if (undef($userfid)) {
+		my $user = prompt 'User:' ;
+		&_bad_input($user);
+		my $passwd = prompt 'Password:', -echo=>'*';
+		my @pwent = ($user, $passwd);
+		return @pwent
+	} else {
+		print "User: ";
+		my $read_set = new IO::Select();
+		my $pid = open3(undef, \*RFID, undef, $rfidbin) or die "RFIDBIN";
+		$read_set->add(\*RFID);
+		$read_set->add(\*STDIN);
+
+		my @ready;
+		while (@ready = $read_set->can_read()) {
+			foreach my $fh (@ready) {
+				$user = <$fh>;
+				chomp($user);
+
+				# if we can read from more than one fd,
+				# STDIN always has the lowest priority!
+				if (scalar @ready > 1 and fileno($fh) eq fileno(STDIN)) {
+					next;
+				}
+
+				if (fileno($fh) eq fileno(RFID)) {
+					`kill $pid`;
+					close(RFID);
+
+					my $sth = $dbh->prepare("SELECT username FROM user WHERE rfid_id=?");
+					$sth->execute($user);
+					my $out = $sth->fetchall_arrayref;
+
+					if (scalar @$out == 0) {
+						&_wrong_pass;
+					}
+					foreach my $row (@$out) {
+						($out) = @$row;
+					}
+					&_hello($out);
+					&_main($out);
+				} elsif (fileno($fh) eq fileno(STDIN)) {
+					`kill $pid`;
+					close(RFID);
+
+					&_bad_input($user);
+					my $passwd = prompt 'Password:', -echo=>'*';
+					my @pwent = ($user, $passwd);
+
+					return @pwent;
+				}
+			}
+		}
+	}
 }
 
 sub _read_credit {
@@ -453,7 +512,7 @@ sub _loscher_menu {
 	if ($result == "1") {
 		print "Hi Master aka $user ...\n\n";
 		my $choice = prompt 'Add User or Back to Main ...', -number, -timeout=>$timeout, -default=>'Main Menu', -menu => [
-                                        'Add User', 'Change Password', 'Show User', 'Add Drink', 'Edit Drink','Delete Drink', 'Plugins',
+                                        'Add User', 'Change Password', 'Change/Add RFID UID', 'Show User', 'Add Drink', 'Edit Drink','Delete Drink', 'Plugins',
                                         'Main Menu'], 'matomat>';
 
 			if ($choice eq "Add User") {
@@ -467,6 +526,9 @@ sub _loscher_menu {
                                 &_edit_drink;
                         } elsif ($choice eq "Delete Drink") {
                                 &_delete_drink
+			} elsif ($choice eq "Change/Add RFID UID") {
+				my $username = prompt "Change/add RFID UID for user: ";
+				&_change_rfiduid($username);
 			} elsif ($choice eq "Plugins") {
 				&_plugins
 	                } elsif ($choice eq "Change Password") {
@@ -476,11 +538,11 @@ sub _loscher_menu {
                		} else {
                         	&_main;
                 	}
-                } else {
+	} else {
 			print "\n[NO_MATE] You don't have loscher rights!!!\n";
-                        sleep 2;
-                        &_main;
-	} 
+			sleep 2;
+			&_main;
+	}
 }
 
 sub _add_user {
@@ -591,6 +653,40 @@ sub _change_pass {
 		sleep 3;
 		&_main;
         }
+}
+
+sub _change_rfiduid {
+	my ($user) = @_;
+	&_bad_input($user);
+
+	# if RFID is not enabled or we're not at a real TTY
+	# changing the ID doesn't make that much sene...
+	if (undef($userfid)) {
+		print "\n[NO_MATE] You can't do this here or now.";
+		sleep 3;
+		&_main;
+	}
+
+	print "Changing RFID UID for user: $user\n\n";
+
+	my $sth = $dbh->prepare("UPDATE user set rfid_id=? WHERE username='$user'");
+
+	print "Please put the card on the reader now...\n";
+	my $uid = `$rfidbin`;
+	if ($uid !~ /[0-9]{1,}/) {
+		print "\n[NO_MATE] Something failed!\n\n";
+		sleep 3;
+		&_main;
+	}
+
+	$sth->execute($uid);
+	if ($sth) {
+	        print "\n[MORE_MATE] Password change successful!\n\n";
+	} else {
+	        print "\n[NO_MATE] Something failed!\n\n";
+	}
+	sleep 3;
+	&_main;
 }
 
 sub _show_user {
