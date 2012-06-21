@@ -22,7 +22,7 @@ Perl modules:
 - Term::ReadKey
 - Module::Load
 
-Install missing modules doing the following
+Install missing modules using the following command
 
 > sudo perl -MCPAN -e "install MODULE_NAME"
 
@@ -33,7 +33,7 @@ INSTALL:
 
 Create the matomat.db in /var/matomat/
 
-You can simple use the install.sh to create the DB and place the files.
+You can simply use the install.sh script to create the DB and place the files.
 
 Default user is admin with password matomat.
 
