@@ -21,7 +21,7 @@ $ENV{'PATH'} = '/bin:/usr/bin';
 
 # only use rfid if a) there's a binary b) we are on a actual TTY
 my $userfid = undef;
-if (`/usr/bin/tty` =~ 'pts' and $rfidbin != "") {
+if (`/usr/bin/tty` =~ 'tty1' and $rfidbin != "") {
 	$userfid = "fnord";
 }
 
@@ -227,7 +227,7 @@ sub _main_menu {
 sub _prompt_for_login {
 	my $user;
 
-	if (undef($userfid)) {
+	if (!defined($userfid)) {
 		my $user = prompt 'User:' ;
 		&_bad_input($user);
 		my $passwd = prompt 'Password:', -echo=>'*';
