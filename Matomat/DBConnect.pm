@@ -8,9 +8,6 @@ use Exporter 'import';
 use DBI;
 use Matomat::Config;
 
-print "DB: $dbfile\n";
-sleep(2);
-
 my $dbargs = {AutoCommit => 1, PrintError => 1, foreign_keys => 1};
 our $dbh = DBI->connect("dbi:SQLite:dbname=$dbfile", "", "", $dbargs);
 $dbh->do("PRAGMA foreign_keys = ON");
