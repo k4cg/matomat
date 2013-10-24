@@ -43,7 +43,7 @@ You can simply use the install.sh script to create the DB and place the files.
 Default user is admin with password matomat.
 
 > sqlite3 /var/matomat/matomat.db "CREATE TABLE user (userid INTEGER PRIMARY KEY, username TEXT UNIQUE, pw_hash TEXT, privs INT, credits INT);"
-> sqlite3 /var/matomat/matomat.db "INSERT INTO user  (username, pw_hash, pw_change, rfid_id, privs, credits) VALUES ('admin','$xlx37Vm8heXo192iixKl89vB6ZkFygnWBctLHy4vlSjXoAkfo4SDsGefEvocbjhBHmJdRVJXj53aoqZpjfq1ESq0IsXGimKveaXZu2ak9PzYVC6Iawz3wP8xnqnAYC1Uz$WLHrV6B/9Cpa0jrfEv1wtLz4AoifIWEXlcFeOHNnbmLW8K/qUhF//odu9T44RwZ7zeJSeuDA2CPwSZ12phcu5g',0,1000,1,0);"
+> sqlite3 /var/matomat/matomat.db "INSERT INTO user  (username, pw_hash, pw_change, rfid_id, privs, credits) VALUES ('admin','$whbMBT8HnaP934ck40F5NBP11ToG2obQGzrY8FXSDq5mhRJioscGkgt8EuEgMKlSXCX1GHLieT3nDWj9pW2ICGlZFBzV6AVABD5vkaGjfvBHxzaWEUGPifuUQYESfwWu1$qNqasadPwrJOUZtukd/dnM6uDyDoBq1C20Ym26SN71PgbC7Jy6xjaTX2ceZ1bN6VBujXSqdsebZrN7yU2qQGfw',0,1000,1,0);"
 > sqlite3 /var/matomat/matomat.db "CREATE TABLE drinks (drinkid INTEGER PRIMARY KEY, name TEXT UNIQUE, price INT, active INT,fixed INT,t2s TEXT);"
 > sqlite3 /var/matomat/matomat.db "CREATE TABLE plugins (name TXT UNIQUE, filename TXT UNIQUE, active INT);"
 
