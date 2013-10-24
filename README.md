@@ -30,6 +30,7 @@ Install missing modules using the following command
 
 For Debian (Wheezy) use:
 > apt-get install perl sqlite3 festival libconfig-simple-perl libio-prompter-perl libdbi-perl libdbd-sqlite3-perl
+
 > perl -MCPAN -e "install Text::FIGlet"
 
 INSTALL:
