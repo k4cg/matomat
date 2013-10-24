@@ -36,11 +36,11 @@ For Debian (Wheezy) use:
 INSTALL:
 ========
 
-Create the matomat.db in /var/matomat/
+After reading and setting the variables in the `install.sh` script, run it, to create the DB and install the files.
 
-You can simply use the install.sh script to create the DB and place the files.
+Default user is *admin* with password *matomat*.
 
-Default user is admin with password matomat.
+Creating the matomat.db in /var/matomat/ manually:
 
 > sqlite3 /var/matomat/matomat.db "CREATE TABLE user (userid INTEGER PRIMARY KEY, username TEXT UNIQUE, pw_hash TEXT, privs INT, credits INT);"
 > sqlite3 /var/matomat/matomat.db "INSERT INTO user  (username, pw_hash, pw_change, rfid_id, privs, credits) VALUES ('admin','$whbMBT8HnaP934ck40F5NBP11ToG2obQGzrY8FXSDq5mhRJioscGkgt8EuEgMKlSXCX1GHLieT3nDWj9pW2ICGlZFBzV6AVABD5vkaGjfvBHxzaWEUGPifuUQYESfwWu1$qNqasadPwrJOUZtukd/dnM6uDyDoBq1C20Ym26SN71PgbC7Jy6xjaTX2ceZ1bN6VBujXSqdsebZrN7yU2qQGfw',0,1000,1,0);"
@@ -48,7 +48,6 @@ Default user is admin with password matomat.
 > sqlite3 /var/matomat/matomat.db "CREATE TABLE plugins (name TXT UNIQUE, filename TXT UNIQUE, active INT);"
 
 Login with the admin user, change the password, add some drinks and users.
-
 
 AUTHORS:
 ========
