@@ -9,7 +9,7 @@
 CFG_DIR=/etc/
 DATA_DIR=/var/
 BIN_DIR=/usr/local/bin/
-LIB_DIR=/usr/lib/perl5/site_perl
+LIB_DIR=/usr/lib/perl5
 
 if [ "$(id -u)" != "0" ]; then
    echo "This script must be run as root" 1>&2
