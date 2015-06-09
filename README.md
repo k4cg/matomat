@@ -1,7 +1,7 @@
 DESCRIPTION:
 ============
 
-The matomat is a mostly drunken coded perl script to manage the beverate billing
+The matomat is a mostly drunken coded perl script to manage the beverage billing
 at the K4CG (http://www.k4cg.org/).
 
 
