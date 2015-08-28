@@ -561,14 +561,17 @@ sub _add_user {
 	} else {
 		$aflag = "0";
 	}
-	
+
         if ( prompt "Force Password change?", -yn ) {
                 $changepass = "1";
         } else {
                 $changepass = "0";
         }
 
-	my $rfid_id = prompt 'Enter RFID ID:', -i;
+	my $rfid_id = undef;
+	if ( prompt "Set an RFID ID for user?", -yn ) {
+		$rfid_id = prompt 'Enter RFID ID:', -i;
+	}
 
         # Get usernames
         my $sth = $dbh->prepare("SELECT username FROM user");
@@ -661,7 +664,7 @@ sub _change_rfiduid {
 
 	# if RFID is not enabled or we're not at a real TTY
 	# changing the ID doesn't make that much sene...
-	if (undef($userfid)) {
+	if (!defined($userfid)) {
 		print "\n[NO_MATE] You can't do this here or now.";
 		sleep 3;
 		&_main;
@@ -681,7 +684,7 @@ sub _change_rfiduid {
 
 	$sth->execute($uid);
 	if ($sth) {
-	        print "\n[MORE_MATE] Password change successful!\n\n";
+	        print "\n[MORE_MATE] RFID ID change successful!\n\n";
 	} else {
 	        print "\n[NO_MATE] Something failed!\n\n";
 	}
