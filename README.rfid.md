@@ -5,7 +5,7 @@ Hardware:
 At the moment we're using a Touchatag NFC Reader
 
 libnfc:
-- sudo apt-get install libusb-dev libpcsclite-dev pkg-tool
+- sudo apt-get install libusb-dev libpcsclite-dev pkg-config
 - wget https://github.com/nfc-tools/libnfc/releases/download/libnfc-1.5.0/libnfc-1.5.0.tar.gz
 - ./configure
 - make
