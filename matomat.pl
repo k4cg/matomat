@@ -556,13 +556,13 @@ sub _add_user {
 	my $aflag;
 	my $changepass;
 
-	if ( prompt "Is this a Admin User?", -YN ) {
+	if ( prompt "Is this a Admin User?", -yn ) {
 		$aflag = "1";
 	} else {
 		$aflag = "0";
 	}
 	
-        if ( prompt "Force Password change?", -YN ) {
+        if ( prompt "Force Password change?", -yn ) {
                 $changepass = "1";
         } else {
                 $changepass = "0";
@@ -728,13 +728,13 @@ sub _add_drink {
 	my $t2s = prompt "t2s output: (e.g. Cheers, hmm tasty) :";
 	&_bad_input($t2s);
 
-        if ( prompt "Activate the drink?", -YN ) {
+        if ( prompt "Activate the drink?", -yn ) {
                 $active = "1";
         } else {
                 $active = "0";
         }
 
-	if ( prompt "Is the price fixed?", -YN ) {
+	if ( prompt "Is the price fixed?", -yn ) {
                 $fixed = "1";
         } else {
                 $fixed = "0";
@@ -798,13 +798,13 @@ sub _edit_drink {
 		&_bad_input($dprice);
         	my $t2s = prompt "t2s output: (e.g. \"Cheers\", \"hmm tasty\") :";
 		&_bad_input($t2s);
-	        if ( prompt "Activate the drink?", -YN ) { 	
+	        if ( prompt "Activate the drink?", -yn ) {
        		        $active = "1";
         	} else {
                		$active = "0";
         	}
 
-	        if ( prompt "Is the price fixed?", -YN ) {
+	        if ( prompt "Is the price fixed?", -yn ) {
        			$fixed = "1";
         	} else {
                 	$fixed = "0";
@@ -927,13 +927,13 @@ sub _plugins {
 		}
 		print "Name: $name\nFilename: $filename\nActive: $active\n\n";
 		if ($active == 0) {
-			if ( prompt "Do you want to activate this plugin?", -YN) {
+			if ( prompt "Do you want to activate this plugin?", -yn) {
 				$aflag = "1";
 			} else {
 				$aflag = "0";
 			}
 		} elsif ($active == 1) {
-			if ( prompt "Do you want to deactivate this plugin?", -YN) {
+			if ( prompt "Do you want to deactivate this plugin?", -yn) {
                                 $aflag = "0";
                         } else {
                                 $aflag = "1";
