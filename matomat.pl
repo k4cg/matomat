@@ -29,7 +29,7 @@ if (`/usr/bin/tty` =~ 'tty1' and $rfidbin != "") {
 
 sub _login {
 	&_login_banner;
-	if ($rtrate == 1) { 
+	if ($rtrate == 1) {
 		my $rate = &_current_rate;
 		print ~~$font->figify(-A=>"Preis: $rate");
 	}
@@ -47,50 +47,19 @@ sub _login {
 		($out) = @$row;
 	}
 
-	# Migration Stuff
-	# XXX FIX XXX
-	if ($out =~ m/^\$/) {
-		my @storedhash = split(/\$/, $out);
-		my $storedsalt = @storedhash[1];
-		my $storedpass = @storedhash[2];
-		my @saltpass = &_hash_password($storedsalt,$password);
-		my $pass = $saltpass[1];
-		if ($storedpass eq $pass) {
-			&_hello($user);
-			@pwent = ($user, $pass);
-			&_main(@pwent);
-			return;
-		} else {
-			&_wrong_pass;
-		}
+	my @storedhash = split(/\$/, $out);
+	my $storedsalt = @storedhash[1];
+	my $storedpass = @storedhash[2];
+	my @saltpass = &_hash_password($storedsalt,$password);
+	my $pass = $saltpass[1];
+	if ($storedpass eq $pass) {
+		&_hello($user);
+		@pwent = ($user, $pass);
+		&_main(@pwent);
+		return;
 	} else {
-		my $noSalthash = sha512_base64($password);
-
-		if ($out eq $noSalthash) {
-			my $salt = &_genSalt(128);
-			my @salthash = &_hash_password($salt, $password);
-			my $pass = '$'.@salthash[0].'$'.$salthash[1];
-
-		        my $sth = $dbh->prepare("UPDATE user set pw_hash='$pass' WHERE username=?");
-		        $sth->execute($user);
-
-	                &_hello($user);
-       		        @pwent = ($user, $pass);
-                	&_main(@pwent);
-                	return;
-        	} else {
-                	&_wrong_pass;
-        	}
-	} 
-
-	#if ($out eq $pass) {
-	#	&_hello($user);
-	#	@pwent = ($user, $pass);
-	#	&_main(@pwent);
-	#	return;
-	#} else {
-	#	&_wrong_pass;
-	#}
+		&_wrong_pass;
+	}
 }
 
 sub _hello {
@@ -554,19 +523,13 @@ sub _add_user {
 	&_bad_input($startcredit);
 	$startcredit=$startcredit*100;
 	my $aflag;
-	my $changepass;
+	my $changepass = 0;  # Legacy stuff, used for migrating non-hashed passwords
 
 	if ( prompt "Is this a Admin User?", -yn ) {
 		$aflag = "1";
 	} else {
 		$aflag = "0";
 	}
-
-        if ( prompt "Force Password change?", -yn ) {
-                $changepass = "1";
-        } else {
-                $changepass = "0";
-        }
 
 	my $rfid_id = undef;
 	if ( prompt "Set an RFID ID for user?", -yn ) {
