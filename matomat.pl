@@ -813,7 +813,7 @@ sub _delete_drink {
                 &_t2s(@t2s_quit);
                 &_login;
         } else {
-	        if ( prompt "Do you realy want to delete this drink?", -YesNo ) {
+	        if ( prompt "Do you realy want to delete this drink?", -yn ) {
 		        my $dname=$selec."_stats";
 			my $sth = $dbh->do("DROP TABLE $dname");
 			my $sth = $dbh->do("DELETE from drinks WHERE name='$selec'");
