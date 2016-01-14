@@ -535,7 +535,7 @@ sub _add_user {
 	if (defined($userfid) && prompt "Set an RFID ID for user?", -yn ) {
 		print "Please put the card on the reader now...\n";
 		$rfid_id = `$rfidbin`;
-		if ($uid !~ /[0-9]{1,}/) {
+		if ($rfid_id !~ /[0-9]{1,}/) {
 			print "\n[NO_MATE] Something failed!\n\n";
 			sleep 3;
 		}
